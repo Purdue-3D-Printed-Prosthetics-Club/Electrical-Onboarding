@@ -1,0 +1,54 @@
+#include <Servo.h>
+
+Servo myServo;
+
+const int trigPin = 7;
+const int echoPin = 6;
+const int threshold = 10;  // distance in cm to trigger movement
+
+void setup() {
+  myServo.attach(8);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
+}
+
+long getDistanceCM() {
+  // Send a 10us pulse to trigger
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read echo pulse duration
+  long duration = pulseIn(echoPin, HIGH, 30000); // 30ms timeout (~5m max range)
+  if (duration == 0) return -1; // no echo received (out of range or error)
+
+  long distance = duration * 0.0343 / 2; // convert to cm
+  return distance;
+}
+
+void loop() {
+  long distance = getDistanceCM();
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  if (distance > 0 && distance <= threshold) {
+    // Object detected close — run the servo sequence
+    myServo.write(180);
+    delay(2000);
+
+    myServo.write(90);
+    delay(1000);
+
+    myServo.write(0);
+    delay(2000);
+
+    myServo.write(90);
+    delay(1000);
+  } else {
+    // No object nearby — keep servo stopped
+    myServo.write(90);
+  }
+}
