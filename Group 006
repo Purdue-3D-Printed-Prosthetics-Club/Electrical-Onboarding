@@ -1,0 +1,47 @@
+#include <ESP32Servo.h> // Uses the ESP32 specific library
+
+Servo myServo;    
+
+// Safe GPIO pins for ESP32
+const int trigPin = 12;  // Connect to GPIO 12
+const int echoPin = 14;  // Connect to GPIO 13
+const int servoPin = 27 ; // Connect to GPIO 14
+
+long duration;
+int distance;
+int servoAngle;
+
+const int minDistance = 5;   
+const int maxDistance = 50;  
+
+void setup() {
+  Serial.begin(115200);     // ESP32 standard baud rate is 115200
+  pinMode(trigPin, OUTPUT); 
+  pinMode(echoPin, INPUT);  
+  
+  myServo.attach(servoPin); 
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+  
+  distance = constrain(distance, minDistance, maxDistance);
+  servoAngle = map(distance, minDistance, maxDistance, 0, 180);
+  
+  myServo.write(servoAngle);
+  
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print(" cm -> Servo Angle: ");
+  Serial.println(servoAngle);
+  
+  delay(100); 
+}
