@@ -9,6 +9,7 @@
 Servo servo1;
 Servo servo2;
 Servo servo3;
+int counter = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -21,10 +22,23 @@ void loop() {
   int reading = analogRead(A5);
   Serial.println(reading);
   int mapped_reading = map(reading, 0, 1200, 0, 180);
-    
-  servo1.write(mapped_reading);
-  servo2.write(mapped_reading);
-  servo3.write(mapped_reading);
+
+  
+  if (mapped_reading > 10){
+    servo1.write(mapped_reading);
+    servo2.write(mapped_reading);
+    servo3.write(mapped_reading);
+  }else{
+    counter += 1;
+  }
+
+  if(counter >= 1){
+    servo1.write(0);
+    servo2.write(0);
+    servo3.write(0);
+    counter = 0;
+  }
+  Serial.println(mapped_reading);
 
   // if(reading > 900){
   //   servo1.write(30);
@@ -42,5 +56,5 @@ void loop() {
   //   servo3.write(0);
   //   Serial.println("off");
   // }
-  delay(50);
+  delay(200);
 }
