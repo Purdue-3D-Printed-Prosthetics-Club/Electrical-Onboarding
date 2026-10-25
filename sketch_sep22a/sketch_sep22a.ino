@@ -40,21 +40,5 @@ void loop() {
   }
   Serial.println(mapped_reading);
 
-  // if(reading > 900){
-  //   servo1.write(30);
-  //   servo2.write(30);
-  //   servo3.write(30);
-  //   Serial.println("on");
-  // }else if(reading > 200){
-  //   servo1.write(110);
-  //   servo2.write(110);
-  //   servo3.write(110);
-  //   Serial.println("on");
-  // }else{
-  //   servo1.write(0);
-  //   servo2.write(0);
-  //   servo3.write(0);
-  //   Serial.println("off");
-  // }
   delay(200);
 }
